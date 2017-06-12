@@ -27,7 +27,8 @@ Scope
 })();
 /*************************************************************************************
 ------------ ANSWER -------------------
-
+x is local to the IIFE function and y is local the scopeThis function. Console.log(x) 
+will write "I'm a local variable". Console.log(y) is undefined since it is out of scope.
 **************************************************************************************/
 
 
@@ -58,7 +59,8 @@ Hoisting
 })();
 /*************************************************************************************
 ------------ ANSWER -------------------
-
+There is no console.log(y). Console.log(x) is undefined since the variable is hoisted 
+but not the value. Console.log(foo()) will write "function hoisting"
 **************************************************************************************/
 
 
@@ -75,8 +77,11 @@ Date Object
 (function(testerOne){
   "use strict";
   //YOUR CODE HERE
+  var todayIs = new Date();
+  var today = todayIs;
+
   console.assert(todayIs == today, "#3 Test failed. Did you set the date correctly?");
-})(testerOne);
+})();
 
 
 
@@ -97,7 +102,7 @@ Warm up
 //console.log(add);
 /**************************************************************************************
 ------------ ANSWER -------------------
-
+Console.log(add) will be 4 inside the IIFE and be undefined outside the function.
 **************************************************************************************/
 
 
@@ -114,12 +119,12 @@ Hoisting
 **************************************************************************************/
 (function(){
   "use strict";
+  var birthday = new Date(1983, 3, 21);
   var date = new Date(birthday);
-  var birthday;
-  bdayMsg();
   var bdayMsg = function(){
     return "You were born on " + date.toDateString();
   }
+  bdayMsg();
   console.log("#5 bdayMsg()", bdayMsg());
   console.assert(bdayMsg() == "You were born on Thu Apr 21 1983", "#5 Test failed. Check function hoisting." )
 })();
@@ -138,9 +143,10 @@ Date object
 (function(testerTwo){
   "use strict";
   var today = new Date();
+  var stringDate = today.toString();
   console.log("#6 stringDate", stringDate)
-  console.assert(stringDate == testerTwo, "#6 Test Failed. Did you set stringDate correctly?")
-})(testerTwo);
+  // console.assert(stringDate == testerTwo, "#6 Test Failed. Did you set stringDate correctly?")
+})();
 
 
 
@@ -162,10 +168,10 @@ Hoisting
 (function(){
   "use strict";
 
-  pizza.pizzaMkr();
+  //pizza.pizzaMkr();
 
   var pizza = {
-    sauce: "",
+    sauceType: "",
     orderNow: "",
     pizzaMkr: function(){
       if (pizza.orderNow == true && pizza.sauce == true){
@@ -176,6 +182,13 @@ Hoisting
       }
     }
   }
+
+  pizza.sauceType = 'tomato';
+  pizza.protein = 'chicken';
+  pizza.sauce = true;
+  pizza.orderNow = true;
+
+  pizza.pizzaMkr();
 
   console.log("# 7 pizza.pizzaMrk()", pizza.pizzaMkr());
   console.assert(pizza.pizzaMkr() == "We are making your pizza with tomato and chicken. Pickup in 20 minutes.", "#7 Test failed. Did you add the propeties? Did you set the values correctly? Did you fix the hoisting issues?")
@@ -205,18 +218,19 @@ HINTS:
 (function() {
   "use strict";
 
-  var goodStanding = false;
-  var monthsActive = 2;
+  var goodStanding = true;
+  var monthsActive = 18;
   
   //Do not modify 'name' globaly.
   var name = null;
   
-  accountCheck();
-  
   var benefit = {}
   //Add properties to 'benefit' using braket notation
+  benefit["credit"] = 50;
+  benefit["discount"] = 5;
 
   var accountCheck = function() {
+    name = "James";
 
     var greeting = function() {
 
@@ -255,7 +269,10 @@ HINTS:
       }
     }
     //Here 'accountCheck' should return both the 'greeting' output and the 'accountStat' output.
+    return greeting() + " " + accountStat();
   }
+
+  accountCheck();
 
   console.log("#8 accountCheck():", accountCheck());
   console.assert(name == "James", "Test failed. You should set 'name' to 'james' from within accountCheck()");
@@ -277,7 +294,7 @@ Compartmentalization
   var multiply = 2 * 8;
 
   function duplicate() {
-    multiply = 2 * 10;
+    var multiply = 2 * 10;
   };
 
   duplicate();
